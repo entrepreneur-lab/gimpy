@@ -1,2 +1,2 @@
 # gimpy
-Image viewer that allows you to rename image files for ML and AI purposes
+A simple image viewer that allows you to rename image files for ML and AI purposes
