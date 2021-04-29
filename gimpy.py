@@ -8,9 +8,8 @@ Created on Sat Apr 24 10:55:52 2021
 
 import os
 import json
-import numpy as np
 import tkinter as TK
-from PIL import Image
+from skimage.io import imread
 from tkinter import filedialog
 from matplotlib.pyplot import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -20,6 +19,28 @@ class app:
         self.master = master
         self.settings_window()
         self.master.focus_set()
+        
+        # bind up and down arrows to change slice
+        self.min_slice = 0
+        self.max_slice = 1
+        self.master.bind("<Up>", self._up_slice)
+        self.master.bind("<Down>", self._down_slice)
+        
+    def _up_slice(self, event):
+        if self.current_slice < self.max_slice:
+            self.current_slice += 1
+            self.ax.clear()
+            self.ax.imshow(self.image[self.current_slice])
+            self.canvas.draw()
+            self.ax.axis("off")
+    
+    def _down_slice(self, event):
+        if self.current_slice > 0:
+            self.current_slice -= 1
+            self.ax.clear()
+            self.ax.imshow(self.image[self.current_slice])
+            self.canvas.draw()
+            self.ax.axis("off")
         
     def settings_window(self):
         """
@@ -89,7 +110,10 @@ class app:
 
         """
         for i, entry in enumerate(self.inputs):
-            self.master.bind(f"{i}", lambda event: self.rename_file(entry))
+            self.master.bind(f"{i}",
+                             lambda _, entry=entry:
+                                 self.rename_file(entry.get())
+                             )
     
     def annotate(self):
         self.map_inputs()
@@ -112,16 +136,19 @@ class app:
         self.label = TK.Label(self.master,
                               text=f"{self.x + 1} of {len(self.images)}")
         self.label.pack()
-        # help_ = TK.Label(self.master, text="Press number to rename file")
-        # help_.pack()
-            
+        self.update_image()
+        
+    def update_image(self):            
         fig = Figure(figsize=(5,5))
-        ax = fig.add_subplot(111)
-        ax.imshow(
-            np.array(
-                Image.open(self.images[self.x])
-                ),
-            cmap = 'viridis')
+        self.ax = fig.add_subplot(111)
+        self.image = imread(self.images[self.x])
+        try:
+            self.ax.imshow(self.image, cmap = 'viridis')
+        except TypeError:
+            self.current_slice = 0
+            self.max_slice = self.image.shape[0] - 1
+            self.ax.imshow(self.image[self.current_slice], cmap='viridis')
+        self.ax.axis("off")
         self.canvas = FigureCanvasTkAgg(fig, master = self.master)
         self.canvas.get_tk_widget().pack()
     
@@ -130,11 +157,7 @@ class app:
         if self.x != len(self.images):
             self.label.configure(text = f"{self.x + 1} of {len(self.images)}")
             self.canvas.get_tk_widget().pack_forget()
-            fig = Figure(figsize = (5, 5))
-            ax = fig.add_subplot(111)
-            ax.imshow(np.array(Image.open(self.images[self.x])), cmap='viridis')
-            self.canvas = FigureCanvasTkAgg(fig, master=self.master)
-            self.canvas.get_tk_widget().pack()
+            self.update_image()
         else:
             self.canvas.get_tk_widget().pack_forget()
             done = TK.Label(self.master, text='Finished!')
@@ -148,6 +171,7 @@ class app:
             close = TK.Button(self.master, text='Close',
                               command=self.close_app)
             close.pack()
+            self.x = 0
             
     def change_settings(self):
         """
