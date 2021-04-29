@@ -55,8 +55,8 @@ class app:
         settings = filedialog.askopenfilename(
             title="Open a json settings file")
         with open(settings, "r") as f:
-            d = json.loads(f)
-        for value, entry in zip(d, self.inputs):
+            d = json.load(f)
+        for value, entry in zip(d.values(), self.inputs):
             entry.insert(0, value)
     
     def _save_settings(self):
@@ -67,10 +67,13 @@ class app:
         d = {}
         
         for i, ann in enumerate(self.inputs):
-            d[i] = ann
+            d[i] = ann.get()
+            print(ann.get())
         savename = filedialog.asksaveasfile(
             title="Save settings file", mode='w', defaultextension=".json"
             )
+        savename = savename.name.split(os.sep)[-1]
+        print(savename)
         if savename != None:
             with open(savename, "w") as f:
                 json.dump(d, f)
@@ -109,7 +112,7 @@ class app:
         self.label = TK.Label(self.master,
                               text=f"{self.x + 1} of {len(self.images)}")
         self.label.pack()
-        # help_ = TK.Label(self.master, text='''Press number of nodules''')
+        # help_ = TK.Label(self.master, text="Press number to rename file")
         # help_.pack()
             
         fig = Figure(figsize=(5,5))
@@ -142,10 +145,14 @@ class app:
             change = TK.Button(self.master, text="Change settings",
                                command=self.change_settings)
             change.pack()
-            close = TK.Button(self.master, text='Close', command=self.end)
+            close = TK.Button(self.master, text='Close',
+                              command=self.close_app)
             close.pack()
             
     def change_settings(self):
+        """
+        Go back to the settings window
+        """
         self.master.deiconify()
         widgets = self.master.pack_slaves()
         
@@ -155,11 +162,25 @@ class app:
         self.settings_window()
 
     def rename_file(self, map_value):
+        """
+        Rename the file by adding the `map_value` just before the
+        file extension
+
+        Parameters
+        ----------
+        map_value : string
+            class identifier for the image
+
+        Returns
+        -------
+        None.
+
+        """
         renamed = self.images[self.x].replace('.', f"{map_value}.")
         os.rename(self.images[self.x], renamed)
         self.next_image()
         
-    def end(self):
+    def close_app(self):
         self.master.destroy()
 
 if __name__ == "__main__":
