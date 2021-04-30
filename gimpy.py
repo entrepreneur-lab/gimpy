@@ -25,22 +25,42 @@ class app:
         self.max_slice = 1
         self.master.bind("<Up>", self._up_slice)
         self.master.bind("<Down>", self._down_slice)
+        self.master.bind("<Left>", self.navigate_left)
+        self.master.bind("<Right>", self.navigate_right)
         
     def _up_slice(self, event):
         if self.current_slice < self.max_slice:
             self.current_slice += 1
             self.ax.clear()
             self.ax.imshow(self.image[self.current_slice])
-            self.canvas.draw()
             self.ax.axis("off")
+            self.canvas.draw()
     
     def _down_slice(self, event):
         if self.current_slice > 0:
             self.current_slice -= 1
             self.ax.clear()
             self.ax.imshow(self.image[self.current_slice])
-            self.canvas.draw()
             self.ax.axis("off")
+            self.canvas.draw()
+            
+    def navigate_left(self, event):
+        """
+        Press left arrow and move left in the list of images
+        """
+        if hasattr(self, "img_idx"):
+            if self.img_idx > 0:
+                self.img_idx -= 1
+                self.change_image()
+    
+    def navigate_right(self, event):
+        """
+        Press right arrow and move right in the list of images
+        """
+        if hasattr(self, "img_idx"):
+            if self.img_idx < self.num_images - 1:
+                self.img_idx += 1
+                self.change_image()
         
     def settings_window(self):
         """
@@ -132,18 +152,19 @@ class app:
         os.chdir(self.dir)
         
         self.images = [i for i in os.listdir(os.getcwd()) if i.endswith('.tif')]
-        self.x = 0
-        self.imname = self.images[self.x]
+        self.num_images = len(self.images)
+        self.img_idx = 0
+        self.imname = self.images[self.img_idx]
         
-        self.label = TK.Label(self.master,
-                              text=f"{self.x+1} of {len(self.images)}\n{self.imname}")
+        text = f"{self.img_idx+1} of {self.num_images}\n{self.imname}"
+        self.label = TK.Label(self.master, text=text)
         self.label.pack()
         self.update_image()
         
     def update_image(self):            
         fig = Figure(figsize=(5,5))
         self.ax = fig.add_subplot(111)
-        self.image = imread(self.images[self.x])
+        self.image = imread(self.images[self.img_idx])
         try:
             self.ax.imshow(self.image, cmap = 'viridis')
         except TypeError:
@@ -154,10 +175,10 @@ class app:
         self.canvas = FigureCanvasTkAgg(fig, master = self.master)
         self.canvas.get_tk_widget().pack()
     
-    def next_image(self):
-        self.x += 1
-        if self.x != len(self.images):
-            self.label.configure(text = f"{self.x + 1} of {len(self.images)}")
+    def change_image(self):
+        if self.img_idx != len(self.images):
+            text = f"{self.img_idx+1} of {self.num_images}\n{self.imname}"
+            self.label.configure(text=text)
             self.canvas.get_tk_widget().pack_forget()
             self.update_image()
         else:
@@ -173,7 +194,7 @@ class app:
             close = TK.Button(self.master, text='Close',
                               command=self.close_app)
             close.pack()
-            self.x = 0
+            self.img_idx = 0
             
     def change_settings(self):
         """
@@ -202,9 +223,11 @@ class app:
         None.
 
         """
-        renamed = self.images[self.x].replace('.', f"{map_value}.")
-        os.rename(self.images[self.x], renamed)
-        self.next_image()
+        renamed = self.images[self.img_idx].replace('.', f"{map_value}.")
+        os.rename(self.images[self.img_idx], renamed)
+        self.images = [i for i in os.listdir(os.getcwd()) if i.endswith('.tif')]
+        self.img_idx += 1
+        self.change_image()
         
     def close_app(self):
         self.master.destroy()
