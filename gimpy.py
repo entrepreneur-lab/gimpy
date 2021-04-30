@@ -89,19 +89,20 @@ class app:
         
         for i, ann in enumerate(self.inputs):
             d[i] = ann.get()
-            print(ann.get())
+            # print(ann.get())
         savename = filedialog.asksaveasfile(
             title="Save settings file", mode='w', defaultextension=".json"
             )
         savename = savename.name.split(os.sep)[-1]
-        print(savename)
-        if savename != None:
-            with open(savename, "w") as f:
-                json.dump(d, f)
+        # print(savename)
+        if savename == None:
+            savename = "settings.json"
+        with open(savename, "w") as f:
+            json.dump(d, f)
     
     def map_inputs(self):
         """
-        Bind button presses to the name to insert into the images
+        Bind key presses to the name to insert into the images
         found in the directory
 
         Returns
@@ -111,8 +112,8 @@ class app:
         """
         for i, entry in enumerate(self.inputs):
             self.master.bind(f"{i}",
-                             lambda _, entry=entry:
-                                 self.rename_file(entry.get())
+                             lambda event, entry=entry.get():
+                                 self.rename_file(entry)
                              )
     
     def annotate(self):
@@ -132,9 +133,10 @@ class app:
         
         self.images = [i for i in os.listdir(os.getcwd()) if i.endswith('.tif')]
         self.x = 0
+        self.imname = self.images[self.x]
         
         self.label = TK.Label(self.master,
-                              text=f"{self.x + 1} of {len(self.images)}")
+                              text=f"{self.x+1} of {len(self.images)}\n{self.imname}")
         self.label.pack()
         self.update_image()
         
