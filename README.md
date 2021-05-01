@@ -12,4 +12,4 @@ Once installed, run `gimpy` in the terminal and a window will open up that requi
 ### Todo
 - [ ] Convert layout to use Kivy for improved UI
 - [X] Bind up and down arrow keys to navigate through z stacks
-- [ ] Bind left and right arrows to navigate through the image list
+- [X] Bind left and right arrows to navigate through the image list
