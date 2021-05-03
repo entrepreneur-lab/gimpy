@@ -14,21 +14,38 @@ from tkinter import filedialog
 from matplotlib.pyplot import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-class app:
+class GimpyApp:
     def __init__(self, master):
         self.master = master
+        self.master.title("gimpy")
         self.settings_window()
         self.master.focus_set()
         
-        # bind up and down arrows to change slice
+        # correct for error when choosing another directory
+        self.inputs_mapped = False
+        
+        # bind arrow keys to change slice
         self.min_slice = 0
         self.max_slice = 1
-        self.master.bind("<Up>", self._up_slice)
-        self.master.bind("<Down>", self._down_slice)
+        self.master.bind("<Up>", self.up_slice)
+        self.master.bind("<Down>", self.down_slice)
         self.master.bind("<Left>", self.navigate_left)
         self.master.bind("<Right>", self.navigate_right)
         
-    def _up_slice(self, event):
+    def up_slice(self, event):
+        """
+        Move up a slice in the stack
+
+        Parameters
+        ----------
+        event : event
+            The event triggered by the <Up> key press
+
+        Returns
+        -------
+        None.
+
+        """ 
         if self.current_slice < self.max_slice:
             self.current_slice += 1
             self.ax.clear()
@@ -36,7 +53,21 @@ class app:
             self.ax.axis("off")
             self.canvas.draw()
     
-    def _down_slice(self, event):
+    def down_slice(self, event):
+        """
+        Move down a slice in the stack
+
+        Parameters
+        ----------
+        event : event
+            The event triggered by the <Down> key press
+
+        Returns
+        -------
+        None.
+
+        """        
+        
         if self.current_slice > 0:
             self.current_slice -= 1
             self.ax.clear()
@@ -47,6 +78,11 @@ class app:
     def navigate_left(self, event):
         """
         Press left arrow and move left in the list of images
+        
+        Returns
+        -------
+        None.
+
         """
         if hasattr(self, "img_idx"):
             if self.img_idx > 0:
@@ -56,6 +92,11 @@ class app:
     def navigate_right(self, event):
         """
         Press right arrow and move right in the list of images
+        
+        Returns
+        -------
+        None.
+
         """
         if hasattr(self, "img_idx"):
             if self.img_idx < self.num_images - 1:
@@ -65,6 +106,10 @@ class app:
     def settings_window(self):
         """
         Create the settings window
+
+        Returns
+        -------
+        None.
 
         """
 
@@ -92,6 +137,10 @@ class app:
         """
         Load settings from JSON file
 
+        Returns
+        -------
+        None.
+
         """
         settings = filedialog.askopenfilename(
             title="Open a json settings file")
@@ -103,6 +152,10 @@ class app:
     def _save_settings(self):
         """
         Save current settings to a json file
+
+        Returns
+        -------
+        None.
 
         """
         d = dict((i, ann.get()) for i, ann in enumerate(self.inputs))
@@ -126,18 +179,33 @@ class app:
         None.
 
         """
-        for i, entry in enumerate(self.inputs):
-            self.master.bind(f"{i}",
-                             lambda event, entry=entry.get():
-                                 self.rename_file(entry)
-                             )
+        if not self.inputs_mapped:
+            for i, entry in enumerate(self.inputs):
+                self.master.bind(f"{i}",
+                                 lambda event, entry=entry.get():
+                                     self.rename_file(entry)
+                                     )
+        self.inputs_mapped = True
     
     def annotate(self):
+        """
+        Set up the annotation window for renaming files
+
+        Returns
+        -------
+        None.
+
+        """
         self.map_inputs()
         self.master.withdraw()
         
         # destroy widgets from settings window
         widgets = self.master.grid_slaves()
+        for w in widgets:
+            w.destroy()
+        
+        # destroys widgets added for annotating
+        widgets = self.master.pack_slaves()
         for w in widgets:
             w.destroy()
                     
@@ -147,7 +215,8 @@ class app:
             self.canvas.get_tk_widget().pack_forget()
         os.chdir(self.dir)
         
-        self.images = [i for i in os.listdir(os.getcwd()) if i.endswith('.tif')]
+        files = os.listdir(os.getcwd())
+        self.images = sorted([i for i in files if i.endswith('.tif')])
         self.num_images = len(self.images)
         self.img_idx = 0
         self.imname = self.images[self.img_idx]
@@ -157,10 +226,19 @@ class app:
         self.label.pack()
         self.update_image()
         
-    def update_image(self):            
+    def update_image(self):
+        """
+        Update the canvas with the next image in the sequence        
+
+        Returns
+        -------
+        None.
+
+        """            
         fig = Figure(figsize=(5,5))
         self.ax = fig.add_subplot(111)
-        self.image = imread(self.images[self.img_idx])
+        self.imname = self.images[self.img_idx]
+        self.image = imread(self.imname)
         try:
             self.ax.imshow(self.image, cmap = 'viridis')
         except TypeError:
@@ -172,11 +250,20 @@ class app:
         self.canvas.get_tk_widget().pack()
     
     def change_image(self):
+        """
+        Opens the next image in the list of image files
+
+        Returns
+        -------
+        None.
+
+        """
+
         if self.img_idx != len(self.images):
-            text = f"{self.img_idx+1} of {self.num_images}\n{self.imname}"
-            self.label.configure(text=text)
             self.canvas.get_tk_widget().pack_forget()
             self.update_image()
+            text = f"{self.img_idx+1} of {self.num_images}\n{self.imname}"
+            self.label.configure(text=text)
         else:
             self.canvas.get_tk_widget().pack_forget()
             done = TK.Label(self.master, text='Finished!')
@@ -194,7 +281,12 @@ class app:
             
     def change_settings(self):
         """
-        Go back to the settings window
+        Clear widgets and go back to the settings window
+        
+        Returns
+        -------
+        None.
+
         """
         self.master.deiconify()
         widgets = self.master.pack_slaves()
@@ -221,14 +313,24 @@ class app:
         """
         renamed = self.images[self.img_idx].replace('.', f"{map_value}.")
         os.rename(self.images[self.img_idx], renamed)
-        self.images = [i for i in os.listdir(os.getcwd()) if i.endswith('.tif')]
+        files = os.listdir(os.getcwd())
+        self.images = sorted([i for i in files if i.endswith('.tif')])
         self.img_idx += 1
         self.change_image()
         
     def close_app(self):
-        self.master.destroy()
+        """
+        Close the app
 
-if __name__ == "__main__":
+        Returns
+        -------
+        None.
+
+        """        
+        self.master.destroy()
+        
+def main():
     root = TK.Tk()
-    app = app(root)
+    app = GimpyApp(root)
     root.mainloop()
+    
