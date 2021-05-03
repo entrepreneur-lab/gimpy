@@ -105,11 +105,7 @@ class app:
         Save current settings to a json file
 
         """
-        d = {}
-        
-        for i, ann in enumerate(self.inputs):
-            d[i] = ann.get()
-            # print(ann.get())
+        d = dict((i, ann.get()) for i, ann in enumerate(self.inputs))
         savename = filedialog.asksaveasfile(
             title="Save settings file", mode='w', defaultextension=".json"
             )
