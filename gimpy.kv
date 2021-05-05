@@ -25,7 +25,7 @@ ScreenManager:
                 on_release: root.load_file(filechooser.path, filechooser.selection)
             Button:
                 text: "Cancel"
-                on_release: root.cancel()
+                on_release: root.dismiss()
 
 <SaveDialog>:
     title: "Save settings as .json file"
@@ -36,6 +36,10 @@ ScreenManager:
         FileChooserListView:
             id: filechooser
             path: './'
+        TextInput:
+            id: dialog_savename
+            size_hint_y: None
+            height: 30
         BoxLayout:
             size_hint_y: None
             height: 30
@@ -44,4 +48,4 @@ ScreenManager:
                 on_release: root.save_file(filechooser.path, filechooser.selection)
             Button:
                 text: "Cancel"
-                on_release: root.cancel()
+                on_release: root.dismiss()

@@ -11,6 +11,7 @@ import json
 # not sure if skimage import is necessary
 # from skimage.io import imread
 from kivy.app import App
+from kivy.factory import Factory
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.image import AsyncImage
@@ -19,44 +20,24 @@ from kivy.uix.button import Button
 from kivy.uix.carousel import Carousel
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.floatlayout import FloatLayout
 
-class SaveDialog(FloatLayout):
-    save = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-    def show(self):
-        content = SaveDialog(save=self.save_file, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load a file", content=content,
-                            size_hint=(1, 1))
-        self._popup.open()
+class SaveDialog(Popup):
 
     def save_file(self, path, filepath):
-        print(filepath[0])
-        self._popup.dismiss()
+        print(path)
+        print(filepath)
+        self.path = path
+        self.dismiss()
 
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-class LoadDialog(FloatLayout):
-    load = ObjectProperty(None)
-    cancel = ObjectProperty(None)
-
-    def show(self):
-        content = LoadDialog(load=self.load_file, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Load a file", content=content,
-                            size_hint=(1, 1))
-        self._popup.open()
+class LoadDialog(Popup):
 
     def load_file(self, path, filepath):
-        print(filepath[0])
-        self.dismiss_popup()
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
+        print(path)
+        print(filepath)
+        self.filepath = filepath[0]
+        self.dismiss()
 
 class SettingsScreen(Screen):
     def __init__(self, **kwargs):
@@ -96,8 +77,9 @@ class SettingsScreen(Screen):
         
     def save_settings(self, instance):
         # set up the saving file window
-        saving = SaveDialog()
-        saving.show()
+        saving = Factory.SaveDialog()
+        saving.open()
+        # filepath = self.ids.dialog_savename.get()
         
         # save the data
         d = dict((i, e) for i, e in enumerate(self.entries))
@@ -107,8 +89,10 @@ class SettingsScreen(Screen):
         #     json.dump(d, f)
     
     def load_settings(self, instance):
-        loading = LoadDialog()
-        loading.show()
+        loading = Factory.LoadDialog()
+        loading.open()
+        filepath = loading.filepath
+        print(filepath)
     
     def start_annotate(self, instance):
         pass
