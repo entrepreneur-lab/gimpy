@@ -11,6 +11,7 @@ Once installed, run `gimpy` in the terminal and a window will open up that requi
 
 ### Todo
 - [ ] Convert layout to use Kivy for improved UI
+- [ ] Transfer save and load file data between popup and screen
 - [X] Create setup.py to make app available as a package
 - [X] Bind up and down arrow keys to navigate through z stacks
 - [X] Bind left and right arrows to navigate through the image list

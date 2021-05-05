@@ -3,7 +3,9 @@ ScreenManager:
     ViewerScreen:
 
 <SettingsScreen>:
-    name: "settings"     
+    name: "settings"
+    loadfile: None
+    savepath: None
 
 <ViewerScreen>:
     name: "viewer"
@@ -22,7 +24,9 @@ ScreenManager:
             height: 30
             Button:
                 text: "Load"
-                on_release: root.load_file(filechooser.path, filechooser.selection)
+                on_release:
+                    app.root.get_screen("settings").loadfile = filechooser.selection[0]
+                    root.dismiss()
             Button:
                 text: "Cancel"
                 on_release: root.dismiss()
@@ -45,7 +49,7 @@ ScreenManager:
             height: 30
             Button:
                 text: "Save"
-                on_release: root.save_file(filechooser.path, filechooser.selection)
+                on_release: root.save_file(filechooser.path)
             Button:
                 text: "Cancel"
                 on_release: root.dismiss()

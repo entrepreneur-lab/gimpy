@@ -8,6 +8,7 @@ Created on Sat May  1 22:47:47 2021
 
 import os
 import json
+import time
 # not sure if skimage import is necessary
 # from skimage.io import imread
 from kivy.app import App
@@ -25,17 +26,18 @@ from kivy.uix.gridlayout import GridLayout
 
 class SaveDialog(Popup):
 
-    def save_file(self, path, filepath):
-        print(path)
-        print(filepath)
-        self.path = path
+    def save_file(self, path):
+        print(self.ids.dialog_savename.text)
+        savepath = os.path.join(path, self.ids.dialog_savename.text)
+        if not savepath.endswith('.json'):
+            savepath += '.json'
+        print(savepath)
         self.dismiss()
 
 class LoadDialog(Popup):
 
-    def load_file(self, path, filepath):
-        print(path)
-        print(filepath)
+    def load_file(self, filepath):
+        print(filepath[0])
         self.filepath = filepath[0]
         self.dismiss()
 
@@ -79,27 +81,31 @@ class SettingsScreen(Screen):
         # set up the saving file window
         saving = Factory.SaveDialog()
         saving.open()
-        # filepath = self.ids.dialog_savename.get()
+        # while self.savepath is None:
+        #     print("Waiting")
+        #     time.sleep(1)
+        
+        print('running save settings function')
         
         # save the data
         d = dict((i, e) for i, e in enumerate(self.entries))
         # savename = None
-        
         # with open(savename, "w") as f:
         #     json.dump(d, f)
     
     def load_settings(self, instance):
         loading = Factory.LoadDialog()
         loading.open()
-        filepath = loading.filepath
-        print(filepath)
+        
     
     def start_annotate(self, instance):
         pass
 
+
 class ViewerScreen(Screen):
     def on_pre_enter(self):
         Window.size = (600, 600)
+        
 
 class gimpyApp(App):
     
