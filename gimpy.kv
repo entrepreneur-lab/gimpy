@@ -25,7 +25,7 @@ ScreenManager:
             Button:
                 text: "Load"
                 on_release:
-                    app.root.get_screen("settings").loadfile = filechooser.selection[0]
+                    app.root.get_screen("settings").load_settings(filechooser.selection[0])
                     root.dismiss()
             Button:
                 text: "Cancel"
@@ -49,7 +49,10 @@ ScreenManager:
             height: 30
             Button:
                 text: "Save"
-                on_release: root.save_file(filechooser.path)
+                on_release:
+                    app.root.get_screen("settings").savepath = root.save_file(filechooser.path)
+                    app.root.get_screen("settings").save_settings()
+                    root.dismiss()
             Button:
                 text: "Cancel"
                 on_release: root.dismiss()

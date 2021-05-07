@@ -8,7 +8,6 @@ Created on Sat May  1 22:47:47 2021
 
 import os
 import json
-import time
 # not sure if skimage import is necessary
 # from skimage.io import imread
 from kivy.app import App
@@ -27,19 +26,17 @@ from kivy.uix.gridlayout import GridLayout
 class SaveDialog(Popup):
 
     def save_file(self, path):
-        print(self.ids.dialog_savename.text)
         savepath = os.path.join(path, self.ids.dialog_savename.text)
         if not savepath.endswith('.json'):
             savepath += '.json'
         print(savepath)
-        self.dismiss()
+        return savepath
 
 class LoadDialog(Popup):
 
     def load_file(self, filepath):
         print(filepath[0])
         self.filepath = filepath[0]
-        self.dismiss()
 
 class SettingsScreen(Screen):
     def __init__(self, **kwargs):
@@ -63,8 +60,8 @@ class SettingsScreen(Screen):
         start_btn = Button(text="Annotate", size_hint=(1.0, 0.2))
         
         # bind buttons to callbacks
-        load_btn.bind(on_release=self.load_settings)
-        save_btn.bind(on_release=self.save_settings)
+        load_btn.bind(on_release=self.open_load_dialog)
+        save_btn.bind(on_release=self.open_save_dialog)
         start_btn.bind(on_release=self.start_annotate)
         
         # add widgets to layouts
@@ -77,26 +74,31 @@ class SettingsScreen(Screen):
     def on_pre_enter(self):
         Window.size = (400, 500)
         
-    def save_settings(self, instance):
+    def open_save_dialog(self, instance):
         # set up the saving file window
         saving = Factory.SaveDialog()
         saving.open()
-        # while self.savepath is None:
-        #     print("Waiting")
-        #     time.sleep(1)
-        
+
+    def save_settings(self):
         print('running save settings function')
         
         # save the data
-        d = dict((i, e) for i, e in enumerate(self.entries))
-        # savename = None
-        # with open(savename, "w") as f:
-        #     json.dump(d, f)
+        d = dict((i, e.text) for i, e in enumerate(self.entries))
+        with open(self.savepath, "w") as f:
+            json.dump(d, f)
     
-    def load_settings(self, instance):
+    def open_load_dialog(self, instance):
         loading = Factory.LoadDialog()
         loading.open()
         
+    def load_settings(self, fname):
+        print("running load settings function")
+        
+        # load the data
+        with open(fname, 'r') as f:
+            data = json.load(f)
+        for entry, val in zip(self.entries, data.values()):
+            entry.text = val
     
     def start_annotate(self, instance):
         pass
