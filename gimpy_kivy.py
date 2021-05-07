@@ -101,8 +101,13 @@ class SettingsScreen(Screen):
             entry.text = val
     
     def start_annotate(self, instance):
-        pass
-
+        # bind classes to the key presses
+        print('runnning')
+        for i, e in enumerate(self.entries):
+            pass
+        
+        # open filechooser for directory
+        # display images in the carousel
 
 class ViewerScreen(Screen):
     def on_pre_enter(self):
