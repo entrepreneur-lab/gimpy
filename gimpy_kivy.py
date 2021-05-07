@@ -24,7 +24,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 
 class SaveDialog(Popup):
-
     def save_file(self, path):
         savepath = os.path.join(path, self.ids.dialog_savename.text)
         if not savepath.endswith('.json'):
@@ -33,10 +32,10 @@ class SaveDialog(Popup):
         return savepath
 
 class LoadDialog(Popup):
-
-    def load_file(self, filepath):
-        print(filepath[0])
-        self.filepath = filepath[0]
+    pass
+        
+class ImageDirDialog(Popup):
+    pass
 
 class SettingsScreen(Screen):
     def __init__(self, **kwargs):
@@ -62,7 +61,7 @@ class SettingsScreen(Screen):
         # bind buttons to callbacks
         load_btn.bind(on_release=self.open_load_dialog)
         save_btn.bind(on_release=self.open_save_dialog)
-        start_btn.bind(on_release=self.start_annotate)
+        start_btn.bind(on_release=self.choose_image_dir)
         
         # add widgets to layouts
         layout.add_widget(load_btn)
@@ -99,6 +98,10 @@ class SettingsScreen(Screen):
             data = json.load(f)
         for entry, val in zip(self.entries, data.values()):
             entry.text = val
+            
+    def choose_image_dir(self, instance):
+        choose = Factory.LoadDialog()
+        choose.open()
     
     def start_annotate(self, instance):
         # bind classes to the key presses
@@ -111,7 +114,7 @@ class SettingsScreen(Screen):
 
 class ViewerScreen(Screen):
     def on_pre_enter(self):
-        Window.size = (600, 600)
+        Window.size = (700, 700)
         
 
 class gimpyApp(App):

@@ -55,3 +55,28 @@ ScreenManager:
             Button:
                 text: "Cancel"
                 on_release: root.dismiss()
+
+<ImageDirDialog>:
+    title: "Choose a directory of images to annotate"
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            path: './'
+        TextInput:
+            id: dialog_savename
+            size_hint_y: None
+            height: 30
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Save"
+                on_release:
+                    # sort this out
+                    root.dismiss()
+            Button:
+                text: "Cancel"
+                on_release: root.dismiss()
