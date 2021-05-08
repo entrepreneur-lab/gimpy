@@ -125,7 +125,7 @@ class ViewerScreen(Screen):
         # package widgets
         carousel = Carousel(direction="right")
         for im in self.imglist:
-            image = AsyncImage(source=im, allow_stretch=True)
+            image = AsyncImage(source=im, allow_stretch=True, color="cyan")
             carousel.add_widget(image)
         self.add_widget(carousel)
 
