@@ -100,7 +100,7 @@ class SettingsScreen(Screen):
             entry.text = val
             
     def choose_image_dir(self, instance):
-        choose = Factory.LoadDialog()
+        choose = Factory.ImageDirDialog()
         choose.open()
     
     def start_annotate(self, instance):
@@ -113,9 +113,21 @@ class SettingsScreen(Screen):
         # display images in the carousel
 
 class ViewerScreen(Screen):
+    def __init__(self, **kwargs):
+        super(ViewerScreen, self).__init__(**kwargs)
+    
     def on_pre_enter(self):
         Window.size = (700, 700)
+        # get image filenames and info
+        os.chdir(self.imgdir)
+        self.imglist = [i for i in os.listdir() if i.endswith('.tif')]
         
+        # package widgets
+        carousel = Carousel(direction="right")
+        for im in self.imglist:
+            image = AsyncImage(source=im, allow_stretch=True)
+            carousel.add_widget(image)
+        self.add_widget(carousel)
 
 class gimpyApp(App):
     
@@ -124,6 +136,7 @@ class gimpyApp(App):
         sm.add_widget(SettingsScreen(name="settings"))
         sm.add_widget(ViewerScreen(name="viewer"))
         sm.current = "settings"
+        # self.imgdir = None
         return sm
     
     def rename_file(self):

@@ -8,6 +8,7 @@ ScreenManager:
 
 <ViewerScreen>:
     name: "viewer"
+    imgdir: None
 
 <LoadDialog>:
     title: "Load settings from .json file"
@@ -65,18 +66,17 @@ ScreenManager:
         FileChooserListView:
             id: filechooser
             path: './'
-        TextInput:
-            id: dialog_savename
-            size_hint_y: None
-            height: 30
         BoxLayout:
             size_hint_y: None
             height: 30
             Button:
-                text: "Save"
+                text: "Ok"
                 on_release:
                     # sort this out
+                    app.root.get_screen("viewer").imgdir = filechooser.path
+                    print(app.root.get_screen("viewer").imgdir)
                     root.dismiss()
+                    app.root.current = "viewer"
             Button:
                 text: "Cancel"
                 on_release: root.dismiss()
