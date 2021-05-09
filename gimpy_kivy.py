@@ -27,7 +27,6 @@ class SaveDialog(Popup):
         savepath = os.path.join(path, self.ids.dialog_savename.text)
         if not savepath.endswith('.json'):
             savepath += '.json'
-        print(savepath)
         return savepath
 
 class LoadDialog(Popup):
@@ -74,14 +73,10 @@ class SettingsScreen(Screen):
         self.add_widget(overall)
         
     def open_save_dialog(self, instance):
-        # set up the saving file window
         saving = Factory.SaveDialog()
         saving.open()
 
     def save_settings(self):
-        print('running save settings function')
-        
-        # save the data
         d = dict((i, e.text) for i, e in enumerate(self.entries))
         with open(self.savepath, "w") as f:
             json.dump(d, f)
@@ -107,9 +102,6 @@ class SettingsScreen(Screen):
         # bind classes to the key presses
         for i, e in enumerate(self.entries):
             pass
-        
-        # open filechooser for directory
-        # display images in the carousel
 
 class ViewerScreen(Screen):
     def __init__(self, **kwargs):
@@ -123,7 +115,7 @@ class ViewerScreen(Screen):
         self.imglist = sorted([i for i in os.listdir() if i.endswith('.tif')])
         self.img_idx = 0
         
-        # package widgets
+        # prepare widgets
         self.current = self.imglist[self.img_idx]
         self.image = imread(self.current)
         fig = plt.Figure(figsize=(5,5))
@@ -139,7 +131,7 @@ class ViewerScreen(Screen):
         plt.axis("off")
         plt.tight_layout()
         
-        # pack widgets
+        # pack widgets into layout
         layout = BoxLayout(orientation="vertical")
         self.imglbl = Label(text=f"{self.current}", size_hint_y=None,
                             height=60)
@@ -148,13 +140,12 @@ class ViewerScreen(Screen):
         self.add_widget(layout)
 
 class gimpyApp(App):
-    
     def build(self):
-        sm = ScreenManager()
-        sm.add_widget(SettingsScreen(name="settings"))
-        sm.add_widget(ViewerScreen(name="viewer"))
-        sm.current = "settings"
-        return sm
+        self.sm = ScreenManager()
+        self.sm.add_widget(SettingsScreen(name="settings"))
+        self.sm.add_widget(ViewerScreen(name="viewer"))
+        self.sm.current = "settings"
+        return self.sm
     
     def rename_file(self):
         pass

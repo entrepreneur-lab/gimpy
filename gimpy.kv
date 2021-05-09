@@ -72,9 +72,7 @@ ScreenManager:
             Button:
                 text: "Ok"
                 on_release:
-                    # sort this out
                     app.root.get_screen("viewer").imgdir = filechooser.path
-                    print(app.root.get_screen("viewer").imgdir)
                     root.dismiss()
                     app.root.current = "viewer"
             Button:
