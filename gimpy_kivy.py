@@ -16,7 +16,6 @@ from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.carousel import Carousel
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.boxlayout import BoxLayout
@@ -121,18 +120,32 @@ class ViewerScreen(Screen):
         
         # get image filenames and info
         os.chdir(self.imgdir)
-        self.imglist = [i for i in os.listdir() if i.endswith('.tif')]
+        self.imglist = sorted([i for i in os.listdir() if i.endswith('.tif')])
         self.img_idx = 0
         
         # package widgets
-        carousel = Carousel(direction="right")
-        for im in self.imglist:
-            img = imread(im)[self.img_idx]
-            plt.imshow(img, cmap="viridis")
-            plt.axis("off")
-            plt.tight_layout()
-            carousel.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-        self.add_widget(carousel)
+        self.current = self.imglist[self.img_idx]
+        self.image = imread(self.current)
+        fig = plt.Figure(figsize=(5,5))
+        self.ax = fig.add_subplot(111)
+        try:
+            self.ax.imshow(self.image, cmap = 'viridis')
+        except TypeError:
+            self.current_slice = 0
+            self.max_slice = self.image.shape[0] - 1
+            self.ax.imshow(self.image[self.current_slice], cmap='viridis')
+        img = imread(self.current)[self.img_idx]
+        plt.imshow(img, cmap="viridis")
+        plt.axis("off")
+        plt.tight_layout()
+        
+        # pack widgets
+        layout = BoxLayout(orientation="vertical")
+        self.imglbl = Label(text=f"{self.current}", size_hint_y=None,
+                            height=60)
+        layout.add_widget(self.imglbl)
+        layout.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        self.add_widget(layout)
 
 class gimpyApp(App):
     
@@ -141,10 +154,21 @@ class gimpyApp(App):
         sm.add_widget(SettingsScreen(name="settings"))
         sm.add_widget(ViewerScreen(name="viewer"))
         sm.current = "settings"
-        # self.imgdir = None
         return sm
     
     def rename_file(self):
+        pass
+    
+    def _key_down(self):
+        pass
+    
+    def _key_up(self):
+        pass
+
+    def _key_left(self):
+        pass
+    
+    def _key_right(self):
         pass
 
 if __name__ == "__main__":
