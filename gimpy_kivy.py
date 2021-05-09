@@ -22,7 +22,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
-class SaveDialog(Popup):
+
+class MySaveDialog(Popup):
     def save_file(self, path):
         savepath = os.path.join(path, self.ids.dialog_savename.text)
         if not savepath.endswith('.json'):
@@ -73,7 +74,7 @@ class SettingsScreen(Screen):
         self.add_widget(overall)
         
     def open_save_dialog(self, instance):
-        saving = Factory.SaveDialog()
+        saving = Factory.MySaveDialog()
         saving.open()
 
     def save_settings(self):
