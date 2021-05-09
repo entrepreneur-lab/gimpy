@@ -8,13 +8,12 @@ Created on Sat May  1 22:47:47 2021
 
 import os
 import json
-# not sure if skimage import is necessary
-# from skimage.io import imread
+import matplotlib.pyplot as plt
+from skimage.io import imread
 from kivy.app import App
 from kivy.factory import Factory
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
-from kivy.uix.image import AsyncImage
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.carousel import Carousel
@@ -22,6 +21,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 class SaveDialog(Popup):
     def save_file(self, path):
@@ -40,6 +40,10 @@ class ImageDirDialog(Popup):
 class SettingsScreen(Screen):
     def __init__(self, **kwargs):
         super(SettingsScreen, self).__init__(**kwargs)
+        
+    def on_pre_enter(self):
+        Window.size = (400, 500)
+        
         # add box layout to avoid issue with
         # button spanning multiple columns
         overall = BoxLayout(orientation="vertical")
@@ -69,9 +73,6 @@ class SettingsScreen(Screen):
         overall.add_widget(layout)
         overall.add_widget(start_btn)
         self.add_widget(overall)
-        
-    def on_pre_enter(self):
-        Window.size = (400, 500)
         
     def open_save_dialog(self, instance):
         # set up the saving file window
@@ -105,7 +106,6 @@ class SettingsScreen(Screen):
     
     def start_annotate(self, instance):
         # bind classes to the key presses
-        print('runnning')
         for i, e in enumerate(self.entries):
             pass
         
@@ -118,15 +118,20 @@ class ViewerScreen(Screen):
     
     def on_pre_enter(self):
         Window.size = (700, 700)
+        
         # get image filenames and info
         os.chdir(self.imgdir)
         self.imglist = [i for i in os.listdir() if i.endswith('.tif')]
+        self.img_idx = 0
         
         # package widgets
         carousel = Carousel(direction="right")
         for im in self.imglist:
-            image = AsyncImage(source=im, allow_stretch=True, color="cyan")
-            carousel.add_widget(image)
+            img = imread(im)[self.img_idx]
+            plt.imshow(img, cmap="viridis")
+            plt.axis("off")
+            plt.tight_layout()
+            carousel.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         self.add_widget(carousel)
 
 class gimpyApp(App):
