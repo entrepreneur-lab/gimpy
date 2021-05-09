@@ -107,6 +107,8 @@ class SettingsScreen(Screen):
 class ViewerScreen(Screen):
     def __init__(self, **kwargs):
         super(ViewerScreen, self).__init__(**kwargs)
+        self._keyboard = Window.request_keyboard(None, self)
+        self._keyboard.bind(on_key_up=self._on_keyboard_up)
     
     def on_pre_enter(self):
         Window.size = (700, 700)
@@ -139,6 +141,31 @@ class ViewerScreen(Screen):
         layout.add_widget(self.imglbl)
         layout.add_widget(FigureCanvasKivyAgg(plt.gcf()))
         self.add_widget(layout)
+    
+    def _on_keyboard_up(self, keyboard, keycode):
+        text = keycode[1]
+        mapping = {'left' : self.nav_left, 'right' : self.nav_right,
+                   'up' : self.nav_up, 'down' : self.nav_down}
+        func = mapping[text]
+        func()
+        
+    def nav_left(self):
+        print('left')
+    
+    def nav_right(self):
+        print('right')
+    
+    def nav_up(self):
+        print('up')
+    
+    def nav_down(self):
+        print('down')
+        
+    def update_slice(self):
+        pass
+    
+    def change_image(self):
+        pass
 
 class gimpyApp(App):
     def build(self):
@@ -149,18 +176,6 @@ class gimpyApp(App):
         return self.sm
     
     def rename_file(self):
-        pass
-    
-    def _key_down(self):
-        pass
-    
-    def _key_up(self):
-        pass
-
-    def _key_left(self):
-        pass
-    
-    def _key_right(self):
         pass
 
 if __name__ == "__main__":
