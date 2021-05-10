@@ -8,9 +8,9 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 
-from ..dialogs.load import LoadDialog
-from ..dialogs.save import MySaveDialog
-from ..dialogs.image_dir import ImageDirDialog 
+from .dialogs.load import LoadDialog
+from .dialogs.save import MySaveDialog
+from .dialogs.image_dir import ImageDirDialog 
 
 class SettingsScreen(Screen):
     def on_pre_enter(self):
