@@ -15,8 +15,8 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
       name = "gimpy",
-      version = 0.9,
-      py_modules = ['gimpy'],
+      version = "0.6",
+      py_modules = ['gimpy_kv'],
       url = "https://github.com/kynnemall/gimpy",
       description = "GUI app to annotate images by filename",
       long_description = long_description,
@@ -26,11 +26,14 @@ setup(
       maintainer = "Martin Kenny",
       maintainer_email = "sideproject1892@gmail.com",
       packages = find_packages(),
+      package_data = {"": ["gimpy.kv"]},
       entry_points = {
-                      'gui_scripts': ['gimpy=gimpy:main']
+                      'gui_scripts': ['gimpy=gimpy_kv:main']
                       },
       python_requires = ">=3.6",
       install_requires = [
+          "kivy",
+          "kivy-garden",
           "matplotlib",
           "scikit-image",
           ],

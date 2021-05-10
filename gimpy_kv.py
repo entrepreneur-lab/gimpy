@@ -33,5 +33,8 @@ class gimpyApp(App):
     def rename_file(self):
         pass
 
-if __name__ == "__main__":
+def main():
     gimpyApp().run()
+
+if __name__ == "__main__":
+    main()
