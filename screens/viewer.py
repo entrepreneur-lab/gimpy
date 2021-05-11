@@ -47,8 +47,8 @@ class ViewerScreen(Screen):
         
     def layout_screen(self):
         """
-        Layout the viewer with the filename and
-        an image of said file
+        Layout the viewer with the filename
+        and an image of said file
 
         Returns
         -------
@@ -77,10 +77,10 @@ class ViewerScreen(Screen):
         plt.tight_layout()
         
         self.oldlbl = Label(text=f"{self.current.oldname}",
-                            size_hint_y=None, height=60)
+                            size_hint_y=0.05)
         self.newlbl = Label(text=f"{self.current.newname}",
-                            size_hint_y=None, height=60)
-        canvas = FigureCanvasKivyAgg(plt.gcf())
+                            size_hint_y=0.05)
+        canvas = FigureCanvasKivyAgg(plt.gcf(), size_hint_y=0.9)
         self.layout.add_widget(self.oldlbl)
         self.layout.add_widget(self.newlbl)
         self.layout.add_widget(canvas)
