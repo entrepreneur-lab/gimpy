@@ -125,6 +125,8 @@ class SettingsScreen(Screen):
     def choose_image_dir(self, instance):
         """
         Opens a popup to allow user to choose a directory of images
+        and pass class labels with respective key bindings
+        to the app itself
 
         Parameters
         ----------
@@ -136,5 +138,7 @@ class SettingsScreen(Screen):
         None.
 
         """
+        self.label_dict = dict((i, e.text) for i, e in enumerate(self.entries))
+        
         choose = Factory.ImageDirDialog()
         choose.open()

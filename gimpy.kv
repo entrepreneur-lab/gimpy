@@ -5,10 +5,12 @@ ScreenManager:
 <SettingsScreen>:
     name: "settings"
     savepath: None
+    label_dict: None
 
 <ViewerScreen>:
     name: "viewer"
     imgdir: None
+    label_dict: None
 
 <LoadDialog>:
     title: "Load settings from .json file"
@@ -73,6 +75,7 @@ ScreenManager:
                 text: "Ok"
                 on_release:
                     app.root.get_screen("viewer").imgdir = filechooser.path
+                    app.root.get_screen("viewer").label_dict = app.root.get_screen("settings").label_dict
                     root.dismiss()
                     app.root.current = "viewer"
             Button:
