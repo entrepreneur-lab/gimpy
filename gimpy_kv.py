@@ -30,9 +30,6 @@ class gimpyApp(App):
         self.sm.add_widget(ViewerScreen(name="viewer"))
         self.sm.current = "settings"
         return self.sm
-    
-    def rename_file(self):
-        pass
 
 def main():
     gimpyApp().run()

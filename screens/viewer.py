@@ -7,17 +7,23 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
+from .utils.data import ImageNames
+
 class ViewerScreen(Screen):
     def __init__(self, **kwargs):
         super(ViewerScreen, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
         self._keyboard.bind(on_key_up=self._on_keyboard_up)
-        self.mapping = {'left' : self.nav_left, 'right' : self.nav_right,
-                       'up' : self.nav_up, 'down' : self.nav_down}
+        self.mapping = {
+            'left' : self.nav_left,
+            'right' : self.nav_right,
+            'up' : self.nav_up,
+            'down' : self.nav_down
+            }
     
     def on_pre_enter(self):
         """
-        Create the layout just before entering the screen
+        Generate the layout just before entering the screen
 
         Returns
         -------
@@ -29,6 +35,8 @@ class ViewerScreen(Screen):
         # get image filenames and info
         os.chdir(self.imgdir)
         self.imglist = sorted([i for i in os.listdir() if i.endswith('.tif')])
+        self.imglist = [ImageNames(i, "") for i in self.imglist]
+        self.newnames = []
         self.img_idx = 0
         self.num_images = len(self.imglist)
         
@@ -51,7 +59,7 @@ class ViewerScreen(Screen):
         # prepare widgets
         self.layout.clear_widgets()
         self.current = self.imglist[self.img_idx]
-        self.image = imread(self.current)
+        self.image = imread(self.current.oldname)
         
         # remove current_slice attribute if dealing with mix
         # of multislice and single slice images
@@ -68,10 +76,13 @@ class ViewerScreen(Screen):
         plt.axis("off")
         plt.tight_layout()
         
-        self.imglbl = Label(text=f"{self.current}", size_hint_y=None,
-                            height=60)
+        self.oldlbl = Label(text=f"{self.current.oldname}",
+                            size_hint_y=None, height=60)
+        self.newlbl = Label(text=f"{self.current.newname}",
+                            size_hint_y=None, height=60)
         canvas = FigureCanvasKivyAgg(plt.gcf())
-        self.layout.add_widget(self.imglbl)
+        self.layout.add_widget(self.oldlbl)
+        self.layout.add_widget(self.newlbl)
         self.layout.add_widget(canvas)
         
     
