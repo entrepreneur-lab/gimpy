@@ -85,6 +85,25 @@ class ViewerScreen(Screen):
         self.layout.add_widget(self.newlbl)
         self.layout.add_widget(canvas)
         
+    def change_filename(self, num):
+        """
+        Add the class label into the filename,
+        rename the file, and move to next image.
+
+        Parameters
+        ----------
+        num : integer
+            the integer key pressed on the keyboard, which indicates
+            the class label that should be inserted into the
+            filename
+
+        Returns
+        -------
+        None.
+
+        """
+        print(f"{num} key pressed!")
+        
     
     def _on_keyboard_up(self, keyboard, keycode):
         """
@@ -107,6 +126,8 @@ class ViewerScreen(Screen):
         if text in self.mapping.keys(): 
             func = self.mapping[text]
             func()
+        elif int(text) in range(8):
+            self.change_filename(int(text))
         
     def nav_left(self):
         """
