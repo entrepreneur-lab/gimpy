@@ -1,6 +1,7 @@
 ScreenManager:
     SettingsScreen:
     ViewerScreen:
+    FinalScreen:
 
 <SettingsScreen>:
     name: "settings"
@@ -11,6 +12,23 @@ ScreenManager:
     name: "viewer"
     imgdir: None
     label_dict: None
+    
+<FinalScreen>:
+    name: "final"
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        Label:
+            text: "Finished annotating this folder"
+        Button:
+            text: "Annotate again?"
+            on_release:
+                app.root.current = "settings"
+        Button:
+            text: "Close"
+            on_release:
+                app.stop()
 
 <LoadDialog>:
     title: "Load settings from .json file"

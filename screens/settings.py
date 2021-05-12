@@ -23,7 +23,7 @@ class SettingsScreen(Screen):
         None.
 
         """
-        Window.size = (400, 500)
+        Window.size = (300, 400)
         
         # add box layout to avoid issue with
         # button spanning multiple columns
@@ -32,7 +32,7 @@ class SettingsScreen(Screen):
         self.entries = []
         
         # loop to add all labels and buttons
-        for i in range(8):
+        for i in range(1, 9):
            lbl = Label(text=f"Class {i}")
            entry = TextInput(multiline=False)
            layout.add_widget(lbl)
@@ -82,7 +82,7 @@ class SettingsScreen(Screen):
         None.
 
         """
-        d = dict((i, e.text) for i, e in enumerate(self.entries))
+        d = dict((i, e.text) for i, e in enumerate(self.entries, 1))
         with open(self.savepath, "w") as f:
             json.dump(d, f)
     
@@ -138,7 +138,9 @@ class SettingsScreen(Screen):
         None.
 
         """
-        self.label_dict = dict((i, e.text) for i, e in enumerate(self.entries))
+        self.label_dict = dict(
+            (i, e.text) for i, e in enumerate(self.entries, 1)
+            )
         
         choose = Factory.ImageDirDialog()
         choose.open()

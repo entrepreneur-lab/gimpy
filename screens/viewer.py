@@ -1,4 +1,5 @@
 import os
+import json
 import matplotlib.pyplot as plt
 from skimage.io import imread
 from kivy.core.window import Window
@@ -36,7 +37,6 @@ class ViewerScreen(Screen):
         os.chdir(self.imgdir)
         self.imglist = sorted([i for i in os.listdir() if i.endswith('.tif')])
         self.imglist = [ImageNames(i, "") for i in self.imglist]
-        self.newnames = []
         self.img_idx = 0
         self.num_images = len(self.imglist)
         
@@ -59,7 +59,7 @@ class ViewerScreen(Screen):
         # prepare widgets
         self.layout.clear_widgets()
         self.current = self.imglist[self.img_idx]
-        self.image = imread(self.current.oldname)
+        self.image = imread(self.current.filename)
         
         # remove current_slice attribute if dealing with mix
         # of multislice and single slice images
@@ -76,16 +76,16 @@ class ViewerScreen(Screen):
         plt.axis("off")
         plt.tight_layout()
         
-        self.oldlbl = Label(text=f"{self.current.oldname}",
-                            size_hint_y=0.05)
-        self.newlbl = Label(text=f"{self.current.newname}",
-                            size_hint_y=0.05)
+        header = BoxLayout(orientation="horizontal", size_hint_y=0.1)        
+        self.oldlbl = Label(text=f"{self.current.filename}")
+        self.class_lbl = Label(text=f"Class: {self.current.class_}")
+        header.add_widget(self.oldlbl)
+        header.add_widget(self.class_lbl)
         canvas = FigureCanvasKivyAgg(plt.gcf(), size_hint_y=0.9)
-        self.layout.add_widget(self.oldlbl)
-        self.layout.add_widget(self.newlbl)
+        self.layout.add_widget(header)
         self.layout.add_widget(canvas)
         
-    def change_filename(self, num):
+    def set_class(self, num):
         """
         Add the class label into the filename,
         rename the file, and move to next image.
@@ -102,7 +102,9 @@ class ViewerScreen(Screen):
         None.
 
         """
-        print(f"{num} key pressed!")
+        class_ = self.label_dict[num]
+        self.class_lbl.text = f"Class: {class_}"
+        self.imglist[self.img_idx].class_ = class_
         
     
     def _on_keyboard_up(self, keyboard, keycode):
@@ -126,8 +128,10 @@ class ViewerScreen(Screen):
         if text in self.mapping.keys(): 
             func = self.mapping[text]
             func()
-        elif int(text) in range(8):
-            self.change_filename(int(text))
+        elif text in ('1','2','3','4','5','6','7','8'):
+            self.set_class(int(text))
+        else:
+            pass
         
     def nav_left(self):
         """
@@ -154,6 +158,9 @@ class ViewerScreen(Screen):
         if self.img_idx + 1 < self.num_images:
             self.img_idx += 1
             self.layout_screen()
+        else:
+            self.save_classes()
+            self.manager.current = "final"
     
     def nav_up(self):
         """
@@ -208,3 +215,19 @@ class ViewerScreen(Screen):
             plt.tight_layout()
             canvas = FigureCanvasKivyAgg(plt.gcf())
             self.layout.add_widget(canvas)
+            
+    def save_classes(self):
+        """
+        Save the filenames and class labels to a json file
+
+        Returns
+        -------
+        None.
+
+        """
+        fnames = [i.filename for i in self.imglist]
+        classes = [i.class_ for i in self.imglist]
+        data = {"filenames" : fnames, "class_labels" : classes}
+        with open("classifications.json", "w") as f:
+            json.dump(data, f)
+            

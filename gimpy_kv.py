@@ -10,6 +10,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
 # import custom screens
+from screens.final import FinalScreen
 from screens.viewer import ViewerScreen
 from screens.settings import SettingsScreen      
 
@@ -28,6 +29,7 @@ class gimpyApp(App):
         self.sm = ScreenManager()
         self.sm.add_widget(SettingsScreen(name="settings"))
         self.sm.add_widget(ViewerScreen(name="viewer"))
+        self.sm.add_widget(FinalScreen(name="final"))
         self.sm.current = "settings"
         return self.sm
 
