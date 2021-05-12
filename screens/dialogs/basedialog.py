@@ -1,15 +1,12 @@
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen
+from kivy.uix.popup import Popup
 
-class FinalScreen(Screen):
+class BaseDialog(Popup):
     def __init__(self, **kwargs):
-        super(FinalScreen, self).__init__(**kwargs)
+        super(BaseDialog, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
         self._keyboard.bind(on_key_up=self._on_keyboard_up)
-        
-    def on_pre_enter(self):
-        Window.size = (300, 300)
-        
+    
     def _on_keyboard_up(self, keyboard, keycode):
         """
         When keyboard button is released, map the button to a method
@@ -27,7 +24,5 @@ class FinalScreen(Screen):
 
         """
         text = keycode[1]
-        if text == 'r':
-            self.ids["again"].trigger_action(0.2)
-        elif text == 'c':
-            self.ids["close_app"].trigger_action(0.2)
+        if text == "Esc":
+            self.dismiss()

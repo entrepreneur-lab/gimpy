@@ -44,6 +44,10 @@ class ViewerScreen(Screen):
         self.layout = BoxLayout(orientation="vertical")
         self.layout_screen()
         self.add_widget(self.layout)
+    
+    def on_leave(self):
+        for child in self.children:
+            self.remove_widget(child)
         
     def layout_screen(self):
         """

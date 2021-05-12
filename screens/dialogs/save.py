@@ -1,7 +1,7 @@
 import os
-from kivy.uix.popup import Popup
+from .basedialog import BaseDialog
 
-class MySaveDialog(Popup):
+class MySaveDialog(BaseDialog):
     def save_file(self, path):
         """
         Gets a file savename from the user

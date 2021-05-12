@@ -1,4 +1,4 @@
-from kivy.uix.popup import Popup
+from .basedialog import BaseDialog
 
-class LoadDialog(Popup):
+class LoadDialog(BaseDialog):
     pass

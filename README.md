@@ -27,12 +27,12 @@ NOTE: once you click past the final image with the `<Right>` arrow key, the clas
 * `c` close the application
 
 ##### File chooser dialogs
-* `<Enter>` accept current selection
-* `c`       cancel and close the dialog
+* `<Enter>` accept current selection (working on it)
+* `<Esc>`   cancel and close the dialog
 
 ### Todo
 - [ ] Add support for different file formats
-- [ ] Bind functions to keys
+- [X] Bind functions to keys
 - [X] Convert layout to use Kivy for improved UI
 - [X] Transfer save and load file data between popup and screen
 - [X] Create setup.py to make app available as a package
