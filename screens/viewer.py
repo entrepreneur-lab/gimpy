@@ -14,7 +14,6 @@ class ViewerScreen(Screen):
     def __init__(self, **kwargs):
         super(ViewerScreen, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
-        self._keyboard.bind(on_key_up=self._on_keyboard_up)
         self.mapping = {
             'left' : self.nav_left,
             'right' : self.nav_right,
@@ -31,6 +30,8 @@ class ViewerScreen(Screen):
         None.
 
         """
+        # bind keys
+        self._keyboard.bind(on_key_up=self._on_keyboard_up)
         Window.size = (700, 700)
         
         # get image filenames and info
@@ -46,6 +47,7 @@ class ViewerScreen(Screen):
         self.add_widget(self.layout)
     
     def on_leave(self):
+        self._keyboard.unbind(on_key_up=self._on_keyboard_up)
         for child in self.children:
             self.remove_widget(child)
         

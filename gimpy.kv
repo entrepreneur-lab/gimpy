@@ -23,12 +23,14 @@ ScreenManager:
             text: "Finished annotating this folder"
         Button:
             id: again
-            text: "annotate again?"
+            markup: True
+            text: "[u]r[/u]epeat labelling?"
             on_release:
                 app.root.current = "settings"
         Button:
             id: close_app
-            text: "close"
+            markup: True
+            text: "[u]c[/u]lose"
             on_release:
                 app.stop()
 
@@ -45,6 +47,7 @@ ScreenManager:
             size_hint_y: None
             height: 30
             Button:
+                id: action
                 text: "load"
                 on_release:
                     app.root.get_screen("settings").load_settings(filechooser.selection[0])
@@ -70,6 +73,7 @@ ScreenManager:
             size_hint_y: None
             height: 30
             Button:
+                id: action
                 text: "save"
                 on_release:
                     app.root.get_screen("settings").savepath = root.save_file(filechooser.path)
@@ -92,6 +96,7 @@ ScreenManager:
             size_hint_y: None
             height: 30
             Button:
+                id: action
                 text: "ok"
                 on_release:
                     app.root.get_screen("viewer").imgdir = filechooser.path

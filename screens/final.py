@@ -5,10 +5,13 @@ class FinalScreen(Screen):
     def __init__(self, **kwargs):
         super(FinalScreen, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
-        self._keyboard.bind(on_key_up=self._on_keyboard_up)
         
     def on_pre_enter(self):
         Window.size = (300, 300)
+        self._keyboard.bind(on_key_up=self._on_keyboard_up)
+        
+    def on_leave(self):
+        self._keyboard.unbind(on_key_up=self._on_keyboard_up)
         
     def _on_keyboard_up(self, keyboard, keycode):
         """

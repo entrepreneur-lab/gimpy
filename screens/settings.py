@@ -16,7 +16,6 @@ class SettingsScreen(Screen):
     def __init__(self, **kwargs):
         super(SettingsScreen, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
-        self._keyboard.bind(on_key_up=self._on_keyboard_up)
         
     def _on_keyboard_up(self, keyboard, keycode):
         """
@@ -52,6 +51,9 @@ class SettingsScreen(Screen):
         None.
 
         """
+        
+        # bind keys on enter
+        self._keyboard.bind(on_key_up=self._on_keyboard_up)
         Window.size = (300, 400)
         
         # add box layout to avoid issue with
@@ -68,9 +70,10 @@ class SettingsScreen(Screen):
            layout.add_widget(entry)
            self.entries.append(entry)
            
-        load_btn = Button(text="Load")
-        save_btn = Button(text="Save")
-        start_btn = Button(text="Annotate", size_hint=(1.0, 0.2))
+        load_btn = Button(text="[u]l[/u]oad", markup=True)
+        save_btn = Button(text="[u]s[/u]ave", markup=True)
+        start_btn = Button(text="[u]a[/u]nnotate", markup=True,
+                           size_hint=(1.0, 0.2))
         
         # bind buttons to callbacks
         load_btn.bind(on_release=self.open_load_dialog)
@@ -83,6 +86,9 @@ class SettingsScreen(Screen):
         overall.add_widget(layout)
         overall.add_widget(start_btn)
         self.add_widget(overall)
+        
+    def on_leave(self):
+        self._keyboard.unbind(on_key_up=self._on_keyboard_up)
         
     def open_save_dialog(self, instance):
         """
