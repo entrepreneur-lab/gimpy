@@ -10,8 +10,9 @@ It doesn't take too long to develop such a script, but I figured I can save peop
 Once installed, run `gimpy` in the terminal and a window will open up that requires you to input the class labels you want to insert into your file names just before the file extension. These settings can be saved and reloaded in JSON format, thus saving time when coming back to annotate more data, or to allow another user to annotate similar data in parallel using the same labels.
 
 ### Todo
-- [ ] Convert layout to use Kivy for improved UI
-- [ ] Transfer save and load file data between popup and screen
+- [ ] Add support for different file formats
+- [X] Convert layout to use Kivy for improved UI
+- [X] Transfer save and load file data between popup and screen
 - [X] Create setup.py to make app available as a package
 - [X] Bind up and down arrow keys to navigate through z stacks
 - [X] Bind left and right arrows to navigate through the image list
