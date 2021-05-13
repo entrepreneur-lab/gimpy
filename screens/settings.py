@@ -52,7 +52,7 @@ class SettingsScreen(Screen):
 
         """
         
-        # bind keys on enter
+        # bind keys before entering
         self._keyboard.bind(on_key_up=self._on_keyboard_up)
         Window.size = (300, 400)
         
@@ -104,6 +104,7 @@ class SettingsScreen(Screen):
         None.
 
         """
+        print("Opening save dialog")
         saving = Factory.MySaveDialog()
         saving.open()
 
@@ -135,6 +136,7 @@ class SettingsScreen(Screen):
         None.
 
         """
+        print("Opening load dialog")
         loading = Factory.LoadDialog()
         loading.open()
         
