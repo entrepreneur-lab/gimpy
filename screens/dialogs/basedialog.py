@@ -7,6 +7,7 @@ class BaseDialog(Popup):
         self._keyboard = Window.request_keyboard(None, self)
         self._keyboard.bind(on_key_up=self._on_keyboard_up)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        print("Popup created")
     
     def _on_keyboard_up(self, keyboard, keycode):
         """
