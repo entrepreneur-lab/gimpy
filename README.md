@@ -29,6 +29,7 @@ NOTE: once you click past the final image with the `<Right>` arrow key, the clas
 ##### File chooser dialogs
 * `<Enter>` accept current selection (working on it)
 * `<Esc>`   cancel and close the dialog
+NOTE: Kivy App and Popup classes are bound by default to the `<Esc>` key
 
 ### Todo
 - [ ] Add support for different file formats

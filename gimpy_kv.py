@@ -14,7 +14,7 @@ from screens.final import FinalScreen
 from screens.viewer import ViewerScreen
 from screens.settings import SettingsScreen      
 
-class gimpyApp(App):
+class GimpyApp(App):
     def build(self):
         """
         Build method to create the app
@@ -33,7 +33,7 @@ class gimpyApp(App):
         return self.sm
 
 def main():
-    gimpyApp().run()
+    GimpyApp().run()
 
 if __name__ == "__main__":
     main()
