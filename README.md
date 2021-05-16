@@ -9,6 +9,8 @@ It doesn't take too long to develop such a script, but I figured I can save peop
 ### How to use gimpy
 Once installed, run `gimpy` in the terminal and a window will open up that requires you to input the class labels you want to insert into your file names just before the file extension. These settings can be saved and reloaded in JSON format, thus saving time when coming back to annotate more data, or to allow another user to annotate similar data in parallel using the same labels.
 
+As you navigate through the images, press the number corresponding to your class label of choice and it will appear in the top right of the screen. This will also internally set it as the class label. Class labels are autosaved after every 20 images so no need to worry if the app crashes mid-annotation.
+
 NOTE: once you click past the final image with the `<Right>` arrow key, the class labels will be saved to a json file and the viewer screen will be closed.
 
 ### Screens and bound key presses
@@ -17,14 +19,13 @@ NOTE: once you click past the final image with the `<Right>` arrow key, the clas
 * `l` load settings
 * `a` start classifying images
 
-##### Viewer
+##### Image viewer
 * `<Left`   navigate left through images
-* `<Right>` navigate right
+* `<Right>` navigate right through images
 * `1-8`     link image to class label bound to the specific number
 
 ##### Final
 * `r` run again
-* `c` close the application
 
 ##### File chooser dialogs
 * `<Enter>` accept current selection (working on it)
@@ -33,6 +34,8 @@ NOTE: Kivy App and Popup classes are bound by default to the `<Esc>` key
 
 ### Todo
 - [ ] Add support for different file formats
+- [ ] Fix double key press issue
+- [ ] Add auto-reload method to viewer screen
 - [X] Bind functions to keys
 - [X] Convert layout to use Kivy for improved UI
 - [X] Transfer save and load file data between popup and screen

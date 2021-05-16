@@ -136,8 +136,6 @@ class ViewerScreen(Screen):
             func()
         elif text in ('1','2','3','4','5','6','7','8'):
             self.set_class(int(text))
-        else:
-            pass
         
     def nav_left(self):
         """
@@ -162,6 +160,9 @@ class ViewerScreen(Screen):
 
         """
         if self.img_idx + 1 < self.num_images:
+            if self.img_idx + 1 % 20:
+                # autosave every 20 class labels
+                self.save_classes()
             self.img_idx += 1
             self.layout_screen()
         else:
