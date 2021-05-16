@@ -25,7 +25,6 @@ class gimpyApp(App):
             the screen manager
 
         """
-        self.load_kv("gimpy.kv")
         self.sm = ScreenManager()
         self.sm.add_widget(SettingsScreen(name="settings"))
         self.sm.add_widget(ViewerScreen(name="viewer"))
