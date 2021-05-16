@@ -26,9 +26,9 @@ setup(
       maintainer = "Martin Kenny",
       maintainer_email = "sideproject1892@gmail.com",
       packages = find_packages(),
-      package_data = {"": ["gimpy.kv"]},
+      package_data = {"gimpy": ["gimpy.kv"]},
       entry_points = {
-                      'gui_scripts': ['gimpy=gimpy_kv:main']
+                      'gui_scripts': ['gimpy=gimpy.gimpy_kv:main']
                       },
       python_requires = ">=3.6",
       install_requires = [

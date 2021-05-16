@@ -10,9 +10,9 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
 # import custom screens
-from screens.final import FinalScreen
-from screens.viewer import ViewerScreen
-from screens.settings import SettingsScreen      
+from .screens.final import FinalScreen
+from .screens.viewer import ViewerScreen
+from .screens.settings import SettingsScreen      
 
 class GimpyApp(App):
     def build(self):
@@ -34,6 +34,3 @@ class GimpyApp(App):
 
 def main():
     GimpyApp().run()
-
-if __name__ == "__main__":
-    main()
