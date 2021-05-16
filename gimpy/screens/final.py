@@ -32,5 +32,3 @@ class FinalScreen(Screen):
         text = keycode[1]
         if text == 'r':
             self.ids["again"].trigger_action(0.2)
-        elif text == 'c':
-            self.ids["close_app"].trigger_action(0.2)

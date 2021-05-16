@@ -6,6 +6,7 @@ class BaseDialog(Popup):
         super(BaseDialog, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(None, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        print(type(self))
             
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
         """
@@ -24,6 +25,6 @@ class BaseDialog(Popup):
 
         """
         text = keycode[1]
-        if text == "enter":
+        if text == "enter" and "Dialog" in str(type(self)):
             self.ids.action.trigger_action(0.2)
         

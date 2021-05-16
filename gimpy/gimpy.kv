@@ -20,19 +20,14 @@ ScreenManager:
         pos: root.pos
         orientation: "vertical"
         Label:
-            text: "Finished annotating this folder"
+            markup: True
+            text: "Finished annotating this folder\nPress [u]Esc[/u] to close"
         Button:
             id: again
             markup: True
             text: "[u]r[/u]epeat labelling?"
             on_release:
                 app.root.current = "settings"
-        Button:
-            id: close_app
-            markup: True
-            text: "[u]c[/u]lose"
-            on_release:
-                app.stop()
 
 <LoadDialog>:
     title: "Load settings from .json file"

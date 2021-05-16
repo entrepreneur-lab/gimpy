@@ -39,7 +39,7 @@ class SettingsScreen(Screen):
         elif text == 'l':
             self.open_load_dialog(1)
         elif text == 'a':
-            self.choose_image_dir(1)
+            self.open_image_dialog(1)
     
     def on_pre_enter(self):
         """
@@ -78,7 +78,7 @@ class SettingsScreen(Screen):
         # bind buttons to callbacks
         load_btn.bind(on_release=self.open_load_dialog)
         save_btn.bind(on_release=self.open_save_dialog)
-        start_btn.bind(on_release=self.choose_image_dir)
+        start_btn.bind(on_release=self.open_image_dialog)
         
         # add widgets to layouts
         layout.add_widget(load_btn)
@@ -159,7 +159,7 @@ class SettingsScreen(Screen):
         for entry, val in zip(self.entries, data.values()):
             entry.text = val
             
-    def choose_image_dir(self, instance):
+    def open_image_dialog(self, instance):
         """
         Opens a popup to allow user to choose a directory of images
         and pass class labels with respective key bindings
@@ -176,8 +176,7 @@ class SettingsScreen(Screen):
 
         """
         self.label_dict = dict(
-            (i, e.text) for i, e in enumerate(self.entries, 1)
-            )
+            (i, e.text) for i, e in enumerate(self.entries, 1))
         
         choose = Factory.ImageDirDialog()
         choose.open()
